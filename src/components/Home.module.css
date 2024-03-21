@@ -1,25 +1,52 @@
+.navBar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    background-color: white;
+    padding: 0.5rem;
+    color: black;
+}
+.navBar a {
+    color: black;
+}
+
+button:hover {
+    cursor: pointer;
+}
 
 a {
     list-style: none;
     text-decoration: none;
     color: white;
 }
+.cardWrap {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
 
-li {
+.card {
+    box-sizing: border-box;
     list-style: none;
     text-decoration: none;
+    border: solid 1px white;
+    border-radius: 10px;
+    padding: 0.5rem 0.8rem;
 }
 
 .title {
     font-weight: 500;
 }
 
-ul {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: space-between;
+.coinCard {
+    margin-top: 2rem;
 }
+
+
 
 
 

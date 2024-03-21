@@ -18,10 +18,10 @@ useEffect(() => {
     return(
         <>
             <h1>Home</h1>
-            <ul>
+            <ul className={styles.cardWrap}>
             {coins ? (coins.map((coin) => (
                 <Link key={coin.id} to={`/coin/${coin.id}`}>
-                    <li>
+                    <li className={styles.card}>
                         <h2 className={styles.title}>{coin.name}</h2>
                         <p className={styles.symbol}>{coin.symbol}</p>
                         <p className={styles.text}>{coin.priceUsd}</p>

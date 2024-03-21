@@ -1,44 +1,48 @@
 import { useState, useEffect } from 'react';
-import { fetchCoinByID } from '../utils/coins';
+import styles from "./Home.module.css"
+import { Link } from 'react-router-dom';
 
 function Favorites() {
-  const [IDs, setIDs] = useState([]);
-  const [vacio, setVacio] = useState(null);
-  const [favorites, setFavorites] = ([])
+  const [favorites, setFavorites] = useState([]);
+
   useEffect(() => {
-
-    const favo = (localStorage.getItem("favorites"))
-
-    console.log(favo)
-    if (favo != null) {
-      favo.map((fav) => {
-        setIDs([
-          ...IDs,
-          fav
-        ])
-      })
-    } else {
-      setVacio("No existen favoritos")
+    const stored = JSON.parse(localStorage.getItem('favoriteCoins'))
+    if(stored) {
+      setFavorites(stored)
     }
-  })
-  async function getData(id) {
-    const data = await fetchCoinByID(id)
-    return data
+    console.log(localStorage)
+  }, [])
+
+  const deleteCoin = (id) => {
+    let edited = favorites.filter(fav => fav.coin.id !== id )
+    localStorage.setItem('favoriteCoins', JSON.stringify(edited))
+    setFavorites(edited)
   }
+
+  const deleteAllCoins = () => {
+    localStorage.clear()
+    setFavorites([])
+  }
+
   return (
-    IDs.map((id) => {
-      { let datosId = getData(id) }
-      <Link key={datosId.id} to={`/coin/${datosId.id}`}>
-        <li>
-          <h2 className={styles.title}>{datosId.name}</h2>
-          <p>{datosId.symbol}</p>
-          <p>{datosId.priceUsd}</p>
+    <>
+      <h2>Favorite Coins</h2>
+      <button onClick={deleteAllCoins}>Delete all</button>
+      <ul className={styles.cardWrap}>
+      {favorites ? (favorites.map(c => (
+        <li  className={styles.card} key={c.coin.id}>
+          <h2 className={styles.title}>{c.coin.name}</h2>
+          <p className={styles.symbol}>{c.coin.symbol}</p>
+          <p className={styles.text}>{c.coin.priceUsd}</p>
+          <button onClick={() => deleteCoin(c.coin.id)}>Delete</button>
+          <Link to={`/coin/${c.coin.id}`}>View</Link>
         </li>
-      </Link>
-    })
+      ))) : (
+        <p>No coins stored</p>
+      )}
+      </ul>
+    </>
   )
 }
 
 export default Favorites
-
-// 
