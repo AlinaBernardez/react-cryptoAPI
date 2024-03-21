@@ -1,41 +1,58 @@
 import { useState, useEffect } from 'react';
 import styles from "./Home.module.css"
 import { Link } from 'react-router-dom';
+import { fetchCoins } from '../utils/coins';
+
+let favs = [];
 
 function Favorites() {
+  const [coins, setCoins] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem('favoriteCoins'))
-    if(stored) {
-      setFavorites(stored)
+    const getData = async() => {
+      const data = await fetchCoins()
+      setCoins(data.data)
     }
-    console.log(localStorage)
+    getData()
+    favs = JSON.parse(localStorage.getItem('favoriteCoins'))
+    if(favs) {
+      coins.map(coin => {
+        favs.map(sto => {
+          if(coin.id == sto.id) {
+            favs.push(coin)
+            setFavorites([...favorites, favs])
+          }
+        })
+      })
+    }
   }, [])
 
   const deleteCoin = (id) => {
-    let edited = favorites.filter(fav => fav.coin.id !== id )
+    let edited = favs.filter(fav => fav.id !== id )
     localStorage.setItem('favoriteCoins', JSON.stringify(edited))
+    favs = edited
     setFavorites(edited)
   }
 
   const deleteAllCoins = () => {
     localStorage.clear()
+    favs = []
     setFavorites([])
   }
 
   return (
     <>
       <h2>Favorite Coins</h2>
-      <button onClick={deleteAllCoins}>Delete all</button>
+      <button onClick={() => deleteAllCoins()}>Delete all</button>
       <ul className={styles.cardWrap}>
-      {favorites ? (favorites.map(c => (
-        <li  className={styles.card} key={c.coin.id}>
-          <h2 className={styles.title}>{c.coin.name}</h2>
-          <p className={styles.symbol}>{c.coin.symbol}</p>
-          <p className={styles.text}>{c.coin.priceUsd}</p>
-          <button onClick={() => deleteCoin(c.coin.id)}>Delete</button>
-          <Link to={`/coin/${c.coin.id}`}>View</Link>
+      {favs ? (favs.map(fav => (
+        <li key={fav.id} className={styles.card} >
+          <h2 className={styles.title}>{fav.name}</h2>
+          <p className={styles.symbol}>{fav.symbol}</p>
+          <p className={styles.text}>{fav.priceUsd}</p>
+          <button onClick={() => deleteCoin(fav.id)}>Delete</button>
+          <Link to={`/coin/${fav.id}`}>View</Link>
         </li>
       ))) : (
         <p>No coins stored</p>

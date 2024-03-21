@@ -10,7 +10,6 @@ useEffect(() => {
     const getData = async() => {
         const data = await fetchCoins()
         setCoins(data.data)
-        // console.log(data.data)
     }
     getData()
 }, [coins])

@@ -18,8 +18,20 @@ function Coin() {
     }, [])
 
     const addToFavorite = () => {
-        favorites.push({coin})
-        localStorage.setItem('favoriteCoins', JSON.stringify(favorites))
+        const stored = JSON.parse(localStorage.getItem('favoriteCoins'))
+        if(stored) {
+            stored.map(item => {
+                if(item.id !== coin.id) {
+                    console.log(coin.id)
+                    favorites.push(coin)
+                    localStorage.setItem('favoriteCoins', JSON.stringify(favorites))
+                }
+            })
+        }
+        else {
+            favorites.push(coin)
+            localStorage.setItem('favoriteCoins', JSON.stringify(favorites))
+        }
     }
 
     return (
